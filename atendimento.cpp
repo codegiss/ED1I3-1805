@@ -1,8 +1,85 @@
 #include <iostream>
 using namespace std;
 
+struct No
+{
+    float dado;
+    struct No *prox;
+};
+
+struct Fila
+{
+    No *ini;
+    No *fim;
+};
+
+Fila *init()
+{
+    Fila *f = new Fila();
+    f->ini = NULL;
+    f->fim = NULL;
+    return f;
+}
+
+int isEmpty(Fila *f)
+{
+    return (f->ini == NULL);
+}
+
+int count(Fila *f)
+{
+    int qtd = 0;
+    No *no;
+    no = f->ini;
+    while (no != NULL)
+    {
+        qtd++;
+        no = no->prox;
+    }
+    return qtd;
+}
+
+void enfileirar(Fila *f, float v)
+{
+    No *no = new No();
+    no->dado = v + 1;
+    no->prox = NULL;
+    if (isEmpty(f))
+    {
+        f->ini = no;
+    }
+    else
+    {
+        f->fim->prox = no;
+    }
+    f->fim = no;
+}
+
+float desenfileirar(Fila *f)
+{
+    float ret;
+    if (isEmpty(f))
+    {
+        ret = -1;
+    }
+    else
+    {
+        No *no = f->ini;
+        ret = no->dado;
+        f->ini = no->prox;
+        if (f->ini == NULL)
+        {
+            f->fim = NULL;
+        }
+    }
+    return ret;
+}
+
 int main(int argc, char **argv)
 {
+    Fila *senha;
+    senha = init();
+
     int op = -1;
     int ultimaGerada = 0;
     int qtdAtendidas = 0;
@@ -30,29 +107,25 @@ int main(int argc, char **argv)
             switch (op)
             {
             case 1:
-                // incluir senha na fila, passando a
-                // variavel ultimaGerada como parametro
+                enfileirar(senha, ultimaGerada);
                 ultimaGerada++;
                 cout << "Senha gerada: " << ultimaGerada << endl;
                 cout << endl;
                 break;
             case 2:
-                if (ultimaGerada == qtdAtendidas)
+                if (isEmpty(senha))
                 {
                     cout << "Nao ha senhas aguardando atendimento." << endl;
                     cout << endl;
                 }
                 else
                 {
-                    // tirar senha da fila
+                    cout << "Senha atendida: " << desenfileirar(senha) << endl;
                     qtdAtendidas++;
-                    cout << "Senha atendida." << endl;
                     cout << endl;
                 }
                 break;
             default:
-                cout << "Opcao invalida." << endl;
-                cout << endl;
                 break;
             }
         }
